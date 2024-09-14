@@ -1,4 +1,4 @@
-# Super-Memorizer-Helper (ALPHA)
+# Super-Memorizer-Helper (Under Development)
 The successor of the highly inefficient original memorizer helper, made to make memorizing easy
 # Changes From The Original
 I plan to add the following:
