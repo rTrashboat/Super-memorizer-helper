@@ -4,6 +4,21 @@ from tkinter import messagebox
 import pandas as pd
 import os
 
+def delete_line(title, frame):
+    csv_file = 'lessons.csv'
+    
+    # remove the frame from the UI
+    frame.destroy()
+
+    # reload CSV
+    df = pd.read_csv(csv_file, sep=';')
+    
+    # drop the ENTIRE row(s) where Title matches
+    df = df[df['Title'] != title]
+    
+    # save it back
+    df.to_csv(csv_file, sep=';', index=False)
+
 def get_fonts():
     try:
         title_font = ("VIMH.otf", 20, 'bold')
@@ -117,9 +132,27 @@ def display_titles(window):
         try:
             df = pd.read_csv(csv_file, sep=';')
             for title in df['Title']:
-                title_button = Button(window, text=title, bg="#4a90e2", fg="white", font=("Mothanna.ttf", 12, 'bold'),
-                                      command=lambda t=title: read_lesson(df, t, window))
-                title_button.pack(fill="x", padx=10, pady=2)
+                # put both buttons inside a frame so they can be deleted together
+                row_frame = Frame(window)
+                row_frame.pack(fill="x", padx=5, pady=2)
+
+                title_button = Button(
+                    row_frame, 
+                    text=title, 
+                    bg="#4a90e2", fg="white", 
+                    font=("Mothanna.ttf", 12, 'bold'),
+                    command=lambda t=title: read_lesson(df, t, window)
+                )
+                title_button.pack(side="left", fill="x", expand=True)
+
+                delete_button = Button(
+                    row_frame, 
+                    text="X", 
+                    bg="#e24a4a", fg="white", 
+                    font=("Mothanna.ttf", 12, 'bold'),
+                    command=lambda t=title, f=row_frame: delete_line(t, f)
+                )
+                delete_button.pack(side="right")
         except Exception as e:
             error_label = Label(window, text="Error reading titles.", bg="red", fg="white")
             error_label.pack(fill="x", padx=10, pady=2)
